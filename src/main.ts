@@ -2,10 +2,11 @@
  * @author admin
  */
 import 'reflect-metadata';
-import {container} from "tsyringe";
 import {Client} from 'discord.js'
 import {config} from "dotenv";
 import {CommandOrchestrator} from "./command.orchestrator";
+import {container} from "tsyringe";
+import { Logger } from './shared/Logger';
 config();
 
 const commandClient = new Client({
@@ -18,8 +19,9 @@ const commandPrefix = ">";
 
 (async () => {
     const orchestator = container.resolve<CommandOrchestrator>(CommandOrchestrator);
+    const logger = container.resolve<Logger>(Logger);
     commandClient.on('ready', () => {
-        console.log('Login succeeded');
+        logger.info('Login succeeded');
     });
 
     commandClient.on('message', async msg => {

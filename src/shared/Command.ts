@@ -2,6 +2,8 @@
  * @author admin
  */
 import {Client, DMChannel, Message, MessageActivity, MessageType, NewsChannel, TextChannel, User} from "discord.js";
+import {Logger as CustomLogger} from '../shared/Logger'
+import {container} from "tsyringe";
 
 export abstract class Command {
     protected activity: MessageActivity;
@@ -10,6 +12,7 @@ export abstract class Command {
     protected client: Client;
     protected type: MessageType;
     protected content: string;
+    protected logger = container.resolve<CustomLogger>(CustomLogger);
 
     protected constructor(message: Message) {
         this.activity = message.activity;
