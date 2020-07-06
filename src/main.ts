@@ -11,7 +11,11 @@ config();
 
 const commandClient = new Client({
     presence: {
-        status: "online"
+        status: "online",
+        activity: {
+            type: "LISTENING",
+            name: "The wails of tortured souls"
+        }
     }
 });
 
