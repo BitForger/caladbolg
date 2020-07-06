@@ -13,6 +13,7 @@ export abstract class Command {
     protected type: MessageType;
     protected content: string;
     protected logger = container.resolve<CustomLogger>(CustomLogger);
+    private _args: string[];
 
     protected constructor(message: Message) {
         this.activity = message.activity;
@@ -21,7 +22,17 @@ export abstract class Command {
         this.client = message.client;
         this.type = message.type;
         this.content = message.content;
+        this.args = message.content.split(' ');
         this.run();
+    }
+
+    public set args(content) {
+        content.shift();
+        this._args = content;
+    }
+
+    public get args() {
+        return this._args;
     }
 
     public abstract run();

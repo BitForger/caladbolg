@@ -3,20 +3,24 @@
  */
 import {injectable} from "tsyringe";
 import {createLogger, format, transports} from "winston";
-const {printf, combine, timestamp, colorize, label} = format;
+const {combine, timestamp, label, json, prettyPrint} = format;
 
 @injectable()
 export class Logger {
-    private myFormat = printf(({ level, message, label, timestamp }) => {
-        return `${timestamp} [${label}] ${level}: ${message}`;
-    });
-    logger = createLogger({
-        format: combine(
+    private combinedFormats = process.env.NODE_ENV === 'dev' ?
+        combine(
             label({label: 'caladbolg'}),
             timestamp(),
-            colorize(),
-            this.myFormat,
-        ),
+            json(),
+            prettyPrint(),
+        ) :
+        combine(
+            label({label: 'caladbolg'}),
+            timestamp(),
+            json(),
+        );
+    logger = createLogger({
+        format: this.combinedFormats,
         transports: [
             new transports.Console({
                 level: 'debug'
@@ -25,10 +29,10 @@ export class Logger {
     });
 
     info(message, ...args){
-        this.logger.log('info', message, args);
+        this.logger.log('info', `${message}`, {args});
     }
 
     warn(message, ...args) {
-        this.logger.log('warn', message, args);
+        this.logger.log('warn', `${message}`, {args});
     }
 }

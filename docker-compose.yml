@@ -1,0 +1,13 @@
+version: '3'
+services:
+  bot:
+    container_name: caladbolg
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - './src:/home/node/src'
+      - './dist:/home/node/dist'
+    command: npm run start:dev

@@ -13,16 +13,13 @@ export class HelloWorldCommand extends Command {
     }
 
     async run() {
-        this.logger.info('New Message', this.author);
-        this.channel.startTyping()
         await this.channel.send({
             content: `
-const var = 'world';
+const str = '${this.args.join(' ')}';
 export function func() {
-    console.log('hello', world);
+    console.log('hello', str);
 }`,
             code: 'js'
         });
-        this.channel.stopTyping();
     }
 }
