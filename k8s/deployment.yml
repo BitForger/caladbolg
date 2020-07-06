@@ -1,0 +1,62 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "caladbolg-config-oi8f"
+  namespace: "default"
+  labels:
+    app: "caladbolg"
+data:
+  NODE_ENV: "production"
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "caladbolg"
+  namespace: "default"
+  labels:
+    app: "caladbolg"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "caladbolg"
+  template:
+    metadata:
+      labels:
+        app: "caladbolg"
+    spec:
+      containers:
+        - name: "caladbolg-sha256-1"
+          image: "us.gcr.io/personal-projects-277415/caladbolg@sha256:ca08a247808a6968db3e6e4e8f3af6033dd6e19a72ccacd926516b6bb37974d6"
+          env:
+            - name: "NODE_ENV"
+              valueFrom:
+                configMapKeyRef:
+                  key: "NODE_ENV"
+                  name: "caladbolg-config-oi8f"
+            - name: "DISCORD_TOKEN"
+              valueFrom:
+                configMapKeyRef:
+                  key: "DISCORD_TOKEN"
+                  name: "caladbolg-config-oi8f"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "caladbolg-hpa-usdq"
+  namespace: "default"
+  labels:
+    app: "caladbolg"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "caladbolg"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80
