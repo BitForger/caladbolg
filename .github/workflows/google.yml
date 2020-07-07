@@ -68,7 +68,8 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |
-        cat <<EOF >./k8s/kustomization.yaml
+        cd k8s
+        cat <<EOF >./kustomization.yaml
         secretGenerator:
         - name: caladbolg-secrets
           literals:
@@ -76,6 +77,6 @@ jobs:
         EOF
         gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
         ./kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:${GITHUB_SHA}
-        ./kustomize build ./k8s | kubectl apply -f -
+        ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/$DEPLOYMENT_NAME
         kubectl get services -o wide
