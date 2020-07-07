@@ -69,12 +69,8 @@ jobs:
     - name: Deploy
       run: |
         cd k8s
-        cat <<EOF >./kustomization.yaml
-        secretGenerator:
-        - name: caladbolg-secrets
-          literals:
-          - DISCORD_TOKEN=${{secrets.DISCORD_TOKEN}}
-        EOF
+        echo -n "${{ secrets.DISCORD_TOKEN }}" > ./discord-token.txt
+        kubectl secrets create generic DISCORD_TOKEN --from-file=./discord-token.txt
         gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $GKE_PROJECT
         ../kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:${GITHUB_SHA}
         ../kustomize build . | kubectl apply -f -
