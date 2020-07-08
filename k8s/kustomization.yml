@@ -1,9 +1,0 @@
-commonLabels:
-  app: caladbolg
-resources:
-  - deployment.yml
-  - service.yml
-configMapGenerator:
-  - name: caladbolg-config-oi8f
-    literals:
-      - NODE_ENV=production
