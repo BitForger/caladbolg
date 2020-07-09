@@ -21,8 +21,8 @@ resource "aws_ecs_task_definition" "main" {
       "secrets": [
         {
           "valueFrom": "arn:aws:ssm:us-east-1:508511800738:parameter/caladbolg/discord-token",
-          "name": "REACT_APP_GITHUB_URI"
-        },
+          "name": "DISCORD_TOKEN"
+        }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -34,7 +34,8 @@ resource "aws_ecs_task_definition" "main" {
       }
     }
   ]
-EOF
+  EOF
+
   family = "caladbolg"
   memory = "128"
   cpu = "128"
