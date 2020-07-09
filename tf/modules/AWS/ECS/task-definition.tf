@@ -39,6 +39,7 @@ resource "aws_ecs_task_definition" "main" {
   family = "caladbolg"
   memory = "128"
   cpu = "128"
+  depends_on = [data.aws_iam_role.execution-role]
 }
 
 data "aws_iam_role" "execution-role" {
