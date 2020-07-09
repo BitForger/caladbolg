@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "main" {
-  task_role_arn = data.aws_iam_role.execution-role.arn
+  execution_role_arn = data.aws_iam_role.execution-role.arn
   container_definitions = <<EOF
   [
     {
