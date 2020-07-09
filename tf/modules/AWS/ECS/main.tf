@@ -15,5 +15,5 @@ resource "aws_ecs_service" "main" {
     container_port = 80
     target_group_arn = aws_lb_target_group.main.arn
   }
-  depends_on = [aws_lb_target_group.main, aws_ecs_task_definition.main]
+  depends_on = [aws_lb_target_group.main, aws_ecs_task_definition.main, data.aws_iam_role.execution-role]
 }
