@@ -4,15 +4,6 @@ resource "aws_lb_target_group" "main" {
   protocol = "HTTP"
   target_type = "instance"
   vpc_id = "vpc-97acecec"
-  health_check {
-    protocol = "HTTP"
-    path = "/"
-    healthy_threshold = 5
-    unhealthy_threshold = 2
-    timeout = 5
-    interval = 30
-    matcher = "200,201,401"
-  }
 
   lifecycle {
     create_before_destroy = true
