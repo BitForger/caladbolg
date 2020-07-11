@@ -35,4 +35,8 @@ export class Logger {
     warn(message, ...args) {
         this.logger.log('warn', `${message}`, {args});
     }
+
+    error(message, ...args) {
+        this.logger.log('error', `${message}`, {args});
+    }
 }

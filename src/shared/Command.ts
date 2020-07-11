@@ -35,5 +35,5 @@ export abstract class Command {
         return this._args;
     }
 
-    public abstract run();
+    public abstract async run();
 }
