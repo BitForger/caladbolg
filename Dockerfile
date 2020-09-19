@@ -5,6 +5,7 @@ COPY package.json .
 COPY yarn.lock .
 COPY .prettierrc .
 COPY tsconfig.json .
+COPY nest-cli.json .
 
 RUN npm install
 

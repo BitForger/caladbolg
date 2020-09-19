@@ -9,5 +9,4 @@ services:
       - .env
     volumes:
       - './src:/home/node/src'
-      - './dist:/home/node/dist'
     command: npm run start:dev

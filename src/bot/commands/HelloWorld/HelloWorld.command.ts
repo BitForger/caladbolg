@@ -9,7 +9,7 @@ import { Injectable, Scope } from '@nestjs/common';
   scope: Scope.TRANSIENT,
 })
 export class HelloWorldCommand extends Command {
-  async run(message: Message) {
+  async handle(message: Message) {
     this.processMessage(message);
     await this.channel.send({
       content: `

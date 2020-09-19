@@ -12,6 +12,11 @@ import {
   User,
 } from 'discord.js';
 
+export interface SubCommand {
+  name: string;
+  handler(message: Message);
+}
+
 export abstract class Command {
   protected activity: MessageActivity;
   protected author: User;
@@ -20,6 +25,7 @@ export abstract class Command {
   protected type: MessageType;
   protected content: string;
   private _args: string[];
+  subCommands?: SubCommand[];
 
   public set args(content) {
     content.shift();
@@ -40,5 +46,26 @@ export abstract class Command {
     this.args = message.content.split(' ');
   }
 
-  public abstract async run(message: Message);
+  public async run(message: Message): Promise<void> {
+    this.processMessage(message);
+    await this.handle(message);
+  }
+
+  hasSubCommands(firstArg: string, subCommands = this.subCommands) {
+    if (firstArg) {
+      return subCommands.some(value => value.name === firstArg);
+    }
+    return false;
+  }
+
+  getSubCommand(name: string) {
+    return this.subCommands.find(value => value.name === name);
+  }
+
+  async runSubCommand(name: string, message: Message) {
+    return await this.getSubCommand(name).handler(message);
+  }
+
+  public abstract handle(message: Message): void;
+  public abstract async handle(message: Message): Promise<void>;
 }
