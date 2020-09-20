@@ -59,6 +59,9 @@ export abstract class Command {
   }
 
   getSubCommand(name: string) {
+    if (!this.subCommands.length) {
+      throw new Error('No subcommands defined');
+    }
     return this.subCommands.find(value => value.name === name);
   }
 
