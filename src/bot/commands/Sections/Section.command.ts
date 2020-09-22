@@ -8,6 +8,7 @@ import { Category } from '../../schema/category.schema';
 import { Model } from 'mongoose';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { CreateSubcommand } from './subcommands/create.subcommand';
+import { MessagingService } from '../../services/messaging/messaging.service';
 
 export class SectionCommand extends Command {
   subCommands: SubCommandList[] = [
@@ -28,15 +29,12 @@ export class SectionCommand extends Command {
       },
     },
   ];
-  requiredPermissions = [
-    'MANAGE_CHANNELS',
-    'MANAGE_ROLES',
-  ] as PermissionString[];
 
   constructor(
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
     @InjectPinoLogger() private logger: PinoLogger,
     private createSubCommand: CreateSubcommand,
+    private messagingService: MessagingService,
   ) {
     super();
   }
@@ -47,7 +45,7 @@ export class SectionCommand extends Command {
     }
   }
 
-  joinSection(message: Message) {
+  async joinSection(message: Message) {
     const categoryToJoin = this.args?.join(' ').toLowerCase();
     const categories = this.guild.channels.cache.filter(
       value => value instanceof CategoryChannel || value.type === 'category',
@@ -56,6 +54,24 @@ export class SectionCommand extends Command {
       value => value.name.toLowerCase() === categoryToJoin,
     );
     if (category) {
+      try {
+        const role = (await this.guild.roles.fetch()).cache.find(
+          value => value.name === category.name,
+        );
+        await this.guild.member(this.author).roles.add(role);
+        await this.messagingService.sendResult(message.channel, {
+          name: 'Result',
+          value: `Successfully added to ${category.name}`,
+          inline: false,
+        });
+      } catch (e) {
+        this.logger.error(e);
+        await this.messagingService.sendResult(message.channel, {
+          name: 'Error',
+          value: e,
+          inline: false,
+        });
+      }
     }
   }
 }

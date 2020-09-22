@@ -32,9 +32,7 @@ export abstract class Command {
   protected guild: Guild;
   private _args: string[];
   subCommands?: SubCommandList[];
-  requiredPermissions?: PermissionString[];
-
-  @Inject() private reflector: Reflector;
+  requiredPermissions: PermissionString[] = [];
 
   public set args(content) {
     content.shift();

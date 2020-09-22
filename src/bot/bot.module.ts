@@ -9,7 +9,7 @@ import { HelloWorldCommand } from './commands/HelloWorld/HelloWorld.command';
 import { DiscordClient } from './discord.client';
 import { AnimeCommand } from './commands/Anime/Anime.command';
 import { SectionModule } from './commands/Sections/section.module';
-import { ServicesModule } from './services/services.module';
+import { BotServicesModule } from './services/bot-services.module';
 
 const providers = [
   CommandOrchestrator,
@@ -21,7 +21,7 @@ const providers = [
 
 @Global()
 @Module({
-  imports: [SectionModule, ServicesModule],
+  imports: [SectionModule, BotServicesModule],
   providers,
   exports: [...providers],
 })
