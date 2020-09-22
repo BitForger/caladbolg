@@ -2,12 +2,14 @@
  * @author admin
  */
 
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { CommandOrchestrator } from './command.orchestrator';
 import { CalvinCommand } from './commands/Calvin/Calvin.command';
 import { HelloWorldCommand } from './commands/HelloWorld/HelloWorld.command';
 import { DiscordClient } from './discord.client';
 import { AnimeCommand } from './commands/Anime/Anime.command';
+import { SectionModule } from './commands/Sections/section.module';
+import { ServicesModule } from './services/services.module';
 
 const providers = [
   CommandOrchestrator,
@@ -17,8 +19,9 @@ const providers = [
   AnimeCommand,
 ];
 
+@Global()
 @Module({
-  imports: [],
+  imports: [SectionModule, ServicesModule],
   providers,
   exports: [...providers],
 })

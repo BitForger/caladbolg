@@ -4,17 +4,22 @@
 import {
   Client,
   DMChannel,
+  Guild,
   Message,
   MessageActivity,
   MessageType,
   NewsChannel,
+  PermissionString,
   TextChannel,
   User,
 } from 'discord.js';
+import { SubCommand } from './SubCommand';
+import { Inject } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
-export interface SubCommand {
+export interface SubCommandList {
   name: string;
-  handler(message: Message);
+  handler: (message: Message) => Promise<void> | SubCommand;
 }
 
 export abstract class Command {
@@ -24,8 +29,12 @@ export abstract class Command {
   protected client: Client;
   protected type: MessageType;
   protected content: string;
+  protected guild: Guild;
   private _args: string[];
-  subCommands?: SubCommand[];
+  subCommands?: SubCommandList[];
+  requiredPermissions?: PermissionString[];
+
+  @Inject() private reflector: Reflector;
 
   public set args(content) {
     content.shift();
@@ -43,11 +52,13 @@ export abstract class Command {
     this.client = message.client;
     this.type = message.type;
     this.content = message.content;
+    this.guild = message.guild;
     this.args = message.content.split(' ');
   }
 
   public async run(message: Message): Promise<void> {
     this.processMessage(message);
+    await this.verifyPermissions();
     await this.handle(message);
   }
 
@@ -66,9 +77,21 @@ export abstract class Command {
   }
 
   async runSubCommand(name: string, message: Message) {
-    return await this.getSubCommand(name).handler(message);
+    const subCommandObj = await this.getSubCommand(name);
+    if (subCommandObj.handler instanceof SubCommand) {
+      return await subCommandObj.handler.exec(message);
+    }
+    return await subCommandObj.handler(message);
   }
 
-  public abstract handle(message: Message): void;
+  private async verifyPermissions() {
+    if (this.requiredPermissions.length > 0) {
+      const userRoles = this.guild.member(this.author).roles;
+      if (!userRoles.highest.permissions.any(this.requiredPermissions)) {
+        throw new Error('Missing permissions');
+      }
+    }
+  }
+
   public abstract async handle(message: Message): Promise<void>;
 }

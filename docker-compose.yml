@@ -10,3 +10,10 @@ services:
     volumes:
       - './src:/home/node/src'
     command: npm run start:dev
+    ports:
+    - 3000:3000
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+    - 27017:27017

@@ -8,6 +8,7 @@ import { HelloWorldCommand } from './commands/HelloWorld/HelloWorld.command';
 import { Command } from './commands/Command';
 import { AnimeCommand } from './commands/Anime/Anime.command';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { SectionCommand } from './commands/Sections/Section.command';
 
 type GenericCommand<T extends Command> = Command;
 
@@ -20,12 +21,14 @@ export class CommandOrchestrator {
     { command: 'hello', handler: this.helloWorldCommand },
     { command: 'calvin', handler: this.calvinCommand },
     { command: 'anime', handler: this.animeCommand },
+    { command: 'section', handler: this.sectionCommand },
   ];
 
   constructor(
     private calvinCommand: CalvinCommand,
     private helloWorldCommand: HelloWorldCommand,
     private animeCommand: AnimeCommand,
+    private sectionCommand: SectionCommand,
     @InjectPinoLogger() private logger: PinoLogger,
   ) {}
 
