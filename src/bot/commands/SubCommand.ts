@@ -13,18 +13,7 @@ import {
   User,
 } from 'discord.js';
 
-export interface SubCommandInterface {
-  author: User;
-  channel: TextChannel | DMChannel | NewsChannel;
-  client: Client;
-  type: MessageType;
-  content: string;
-  guild: Guild;
-  exec(message: Message): void | Promise<void>;
-  args: string[];
-}
-
-export abstract class SubCommand implements SubCommandInterface {
+export abstract class SubCommand {
   author: User;
   channel: TextChannel | DMChannel | NewsChannel;
   client: Client;
