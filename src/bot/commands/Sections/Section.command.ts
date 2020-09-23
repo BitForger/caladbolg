@@ -21,12 +21,8 @@ export class SectionCommand extends Command {
       handler: this.createSubCommand,
     },
     {
-      name: 'debug',
-      handler(message: Message) {
-        console.log(
-          message.guild.roles.cache.filter(value => value.managed === true),
-        );
-      },
+      name: 'list',
+      handler: this.listSections.bind(this),
     },
   ];
 
@@ -41,7 +37,15 @@ export class SectionCommand extends Command {
 
   async handle(message: Message) {
     if (this.hasSubCommands(this.args[0])) {
-      await this.runSubCommand(this.args.shift(), message);
+      try {
+        await this.runSubCommand(this.args.shift(), message);
+      } catch (e) {
+        await this.messagingService.sendResult(message.channel, {
+          name: 'Error',
+          value: e,
+          inline: false,
+        });
+      }
     }
   }
 
@@ -73,5 +77,27 @@ export class SectionCommand extends Command {
         });
       }
     }
+  }
+
+  async listSections(message) {
+    const createdCategories = await this.categoryModel
+      .find({ guild: this.guild.id })
+      .lean()
+      .exec();
+    const categories = this.guild.channels.cache.filter(
+      value =>
+        value.type === 'category' &&
+        createdCategories.some(value1 => value.id === value1.category),
+    );
+    await this.messagingService.sendResult(
+      message.channel,
+      ...categories.map(value => {
+        return {
+          name: 'Name',
+          value: value.name,
+          inline: false,
+        };
+      }),
+    );
   }
 }
