@@ -22,6 +22,10 @@ resource "aws_ecs_task_definition" "main" {
         {
           "valueFrom": "arn:aws:ssm:us-east-1:508511800738:parameter/caladbolg/discord-token",
           "name": "DISCORD_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-east-1:508511800738:parameter/caladbolg/mongo_uri",
+          "name": "MONGO_URI",
         }
       ],
       "logConfiguration": {
