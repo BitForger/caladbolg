@@ -7,6 +7,9 @@ resource "aws_ecs_service" "main" {
   name = "caladbolg"
   task_definition = aws_ecs_task_definition.main.arn
   desired_count = 1
+  ordered_placement_strategy {
+    type = "spread"
+  }
 
   cluster = "Production"
   launch_type = "EC2"
