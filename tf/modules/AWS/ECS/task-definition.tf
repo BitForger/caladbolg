@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "main" {
         },
         {
           "valueFrom": "arn:aws:ssm:us-east-1:508511800738:parameter/caladbolg/mongo_uri",
-          "name": "MONGO_URI",
+          "name": "MONGO_URI"
         }
       ],
       "logConfiguration": {
