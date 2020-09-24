@@ -73,7 +73,7 @@ export class CreateSubcommand extends SubCommand {
   }
 
   private async createSection(category: string, role: Role) {
-    const cat = await this.guild.channels.create(category, {
+    return await this.guild.channels.create(category, {
       type: 'category',
       permissionOverwrites: [
         {
@@ -88,7 +88,6 @@ export class CreateSubcommand extends SubCommand {
         },
       ],
     });
-    return cat;
   }
 
   private async createRole(category: string) {

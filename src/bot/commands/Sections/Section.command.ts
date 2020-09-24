@@ -9,12 +9,13 @@ import { Model } from 'mongoose';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { CreateSubcommand } from './subcommands/create.subcommand';
 import { MessagingService } from '../../services/messaging/messaging.service';
+import { JoinSubcommand } from './subcommands/join.subcommand';
 
 export class SectionCommand extends Command {
   subCommands: SubCommandList[] = [
     {
       name: 'join',
-      handler: this.joinSection.bind(this),
+      handler: this.joinSubCommand,
     },
     {
       name: 'create',
@@ -31,6 +32,7 @@ export class SectionCommand extends Command {
     @InjectPinoLogger() private logger: PinoLogger,
     private createSubCommand: CreateSubcommand,
     private messagingService: MessagingService,
+    private joinSubCommand: JoinSubcommand,
   ) {
     super();
   }
@@ -40,36 +42,6 @@ export class SectionCommand extends Command {
       try {
         await this.runSubCommand(this.args.shift(), message);
       } catch (e) {
-        await this.messagingService.sendResult(message.channel, {
-          name: 'Error',
-          value: e,
-          inline: false,
-        });
-      }
-    }
-  }
-
-  async joinSection(message: Message) {
-    const categoryToJoin = this.args?.join(' ').toLowerCase();
-    const categories = this.guild.channels.cache.filter(
-      value => value instanceof CategoryChannel || value.type === 'category',
-    );
-    const category = categories.find(
-      value => value.name.toLowerCase() === categoryToJoin,
-    );
-    if (category) {
-      try {
-        const role = (await this.guild.roles.fetch()).cache.find(
-          value => value.name === category.name,
-        );
-        await this.guild.member(this.author).roles.add(role);
-        await this.messagingService.sendResult(message.channel, {
-          name: 'Result',
-          value: `Successfully added to ${category.name}`,
-          inline: false,
-        });
-      } catch (e) {
-        this.logger.error(e);
         await this.messagingService.sendResult(message.channel, {
           name: 'Error',
           value: e,
