@@ -4,6 +4,7 @@ import { BotModule } from './bot/bot.module';
 import { LoggerModule } from 'nestjs-pino';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Category, CategorySchema } from './bot/schema/category.schema';
+import { DiscordModule } from 'nestjs-discord';
 
 @Global()
 @Module({
@@ -31,6 +32,10 @@ import { Category, CategorySchema } from './bot/schema/category.schema';
         schema: CategorySchema,
       },
     ]),
+    DiscordModule.forRoot({
+      token: process.env.DISCORD_TOKEN,
+      prefix: '>',
+    }),
   ],
   controllers: [AppController],
   providers: [],
