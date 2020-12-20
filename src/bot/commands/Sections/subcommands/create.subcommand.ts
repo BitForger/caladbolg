@@ -17,7 +17,7 @@ export class CreateSubcommand extends SubCommand {
   ] as PermissionString[];
 
   constructor(
-    @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
+    // @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
     @InjectPinoLogger() private logger: PinoLogger,
   ) {
     super();
@@ -61,15 +61,15 @@ export class CreateSubcommand extends SubCommand {
   }
 
   private async saveToDb(role: Role, cat: CategoryChannel) {
-    const categoryObject = new this.categoryModel({
-      guild: this.guild.id,
-      guildName: this.guild.name,
-      role: role.id,
-      category: cat.id,
-      categoryName: cat.name,
-    });
-
-    await categoryObject.save();
+    // const categoryObject = new this.categoryModel({
+    //   guild: this.guild.id,
+    //   guildName: this.guild.name,
+    //   role: role.id,
+    //   category: cat.id,
+    //   categoryName: cat.name,
+    // });
+    //
+    // await categoryObject.save();
   }
 
   private async createSection(category: string, role: Role) {

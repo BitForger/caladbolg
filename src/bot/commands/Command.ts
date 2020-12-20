@@ -17,9 +17,9 @@ import { SubCommand } from './SubCommand';
 import { Inject } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-export interface SubCommandList {
+export interface SubCommandListItem {
   name: string;
-  handler: (message: Message) => Promise<void> | SubCommand;
+  handler: ((message: Message) => Promise<void>) | SubCommand;
 }
 
 export abstract class Command {
@@ -31,7 +31,7 @@ export abstract class Command {
   protected content: string;
   protected guild: Guild;
   private _args: string[];
-  subCommands?: SubCommandList[];
+  subCommands?: SubCommandListItem[];
   requiredPermissions: PermissionString[] = [];
 
   public set args(content) {

@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { BotModule } from './bot/bot.module';
 import { LoggerModule } from 'nestjs-pino';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { Category, CategorySchema } from './bot/schema/category.schema';
 import { DiscordModule } from 'nestjs-discord';
 
@@ -19,8 +19,8 @@ import { DiscordModule } from 'nestjs-discord';
         };
       },
     }),
-    MongooseModule.forRootAsync({
-      useFactory() {
+    /*MongooseModule.forRootAsync({
+      useFactory(): MongooseModuleOptions {
         return {
           uri: process.env.MONGO_URI,
         };
@@ -31,7 +31,7 @@ import { DiscordModule } from 'nestjs-discord';
         name: Category.name,
         schema: CategorySchema,
       },
-    ]),
+    ]),*/
     DiscordModule.forRoot({
       token: process.env.DISCORD_TOKEN,
       prefix: '>',
@@ -39,6 +39,6 @@ import { DiscordModule } from 'nestjs-discord';
   ],
   controllers: [AppController],
   providers: [],
-  exports: [MongooseModule],
+  exports: [],
 })
 export class AppModule {}

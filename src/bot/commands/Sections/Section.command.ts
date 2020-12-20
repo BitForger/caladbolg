@@ -1,7 +1,7 @@
 /**
  * @author admin
  */
-import { Command, SubCommandList } from '../Command';
+import { Command, SubCommandListItem } from '../Command';
 import { CategoryChannel, Message, PermissionString } from 'discord.js';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from '../../schema/category.schema';
@@ -12,7 +12,7 @@ import { MessagingService } from '../../services/messaging/messaging.service';
 import { JoinSubcommand } from './subcommands/join.subcommand';
 
 export class SectionCommand extends Command {
-  subCommands: SubCommandList[] = [
+  subCommands: SubCommandListItem[] = [
     {
       name: 'join',
       handler: this.joinSubCommand,
@@ -21,14 +21,10 @@ export class SectionCommand extends Command {
       name: 'create',
       handler: this.createSubCommand,
     },
-    {
-      name: 'list',
-      handler: this.listSections.bind(this),
-    },
   ];
 
   constructor(
-    @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
+    // @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
     @InjectPinoLogger() private logger: PinoLogger,
     private createSubCommand: CreateSubcommand,
     private messagingService: MessagingService,
@@ -51,7 +47,7 @@ export class SectionCommand extends Command {
     }
   }
 
-  async listSections(message) {
+  /*async listSections(message) {
     const createdCategories = await this.categoryModel
       .find({ guild: this.guild.id })
       .lean()
@@ -71,5 +67,5 @@ export class SectionCommand extends Command {
         };
       }),
     );
-  }
+  }*/
 }
